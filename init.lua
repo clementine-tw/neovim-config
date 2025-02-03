@@ -34,8 +34,8 @@ vim.opt.cursorline = true
 vim.opt.scrolloff = 10
 
 -- Set tab size
-vim.opt.tabstop = 2
-vim.opt.shiftwidth = 2
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
 
 -- Don't insert "spaces" when I type "<TAB>" in insert mode
 vim.opt.expandtab = false
