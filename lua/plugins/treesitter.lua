@@ -12,6 +12,12 @@ return {
 			"gomod",
 			"gosum",
 			"gowork",
+			"javascript",
+			"typescript",
+			"tsx",
+			"json",
+			"css",
+			"html",
 		},
 		highlight = {
 			enable = true,
