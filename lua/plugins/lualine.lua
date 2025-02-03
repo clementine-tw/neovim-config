@@ -19,7 +19,7 @@ return {
 				"filetype",
 				{
 					function()
-						local clients = vim.lsp.get_active_clients()
+						local clients = vim.lsp.get_clients()
 						if next(clients) == nil then
 							return "No LSP"
 						end
@@ -40,11 +40,12 @@ return {
 			lualine_y = { "progress" },
 			lualine_z = { "location" },
 		},
-		extensions = {
-			"fzf",
-			"lazy",
-			"man",
-			"mason",
-		},
+		-- TODO: I don't know what these do
+		-- extensions = {
+		-- 	"fzf",
+		-- 	"lazy",
+		-- 	"man",
+		-- 	"mason",
+		-- },
 	},
 }
