@@ -37,6 +37,9 @@ vim.opt.scrolloff = 10
 vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
 
+-- Set fold
+vim.opt.foldmethod = "indent"
+
 -- Don't insert "spaces" when I type "<TAB>" in insert mode
 vim.opt.expandtab = false
 
