@@ -39,6 +39,6 @@ return { -- Autoformat
 	{
 		"windwp/nvim-autopairs",
 		event = "InsertEnter",
-		config = true,
+		opts = {},
 	},
 }
