@@ -38,7 +38,13 @@ vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
 
 -- Set fold
-vim.opt.foldmethod = "indent"
+-- vim.opt.foldmethod = "indent"
+
+-- Set for plugin "nvim-ufo"
+vim.o.foldcolumn = "1" -- '0' is not bad
+vim.o.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
+vim.o.foldlevelstart = 99
+vim.o.foldenable = true
 
 -- Don't insert "spaces" when I type "<TAB>" in insert mode
 vim.opt.expandtab = false
