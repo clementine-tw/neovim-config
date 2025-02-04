@@ -43,5 +43,17 @@ return {
 			end,
 			desc = "Find references",
 		},
+		{
+			"<leader>fed",
+			function()
+				require("fzf-lua").lsp_document_diagnostics()
+			end,
+		},
+		{
+			"<leader>few",
+			function()
+				require("fzf-lua").lsp_workspace_diagnostics()
+			end,
+		},
 	},
 }
