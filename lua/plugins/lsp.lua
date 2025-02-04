@@ -37,7 +37,13 @@ return {
 		"williamboman/mason-lspconfig.nvim",
 		dependencies = { { "mason.nvim", opts = {} } },
 		opts = {
-			ensure_installed = { "gopls", "lua_ls" }, -- 確保 gopls 被安裝
+			ensure_installed = {
+				"lua_ls",
+				"gopls",
+				"ts_ls",
+				"eslint",
+				"tailwindcss",
+			},
 			automatic_installation = true,
 		},
 	},
@@ -255,17 +261,39 @@ return {
 
 			lspconfig.ts_ls.setup({
 				capabilities = capabilities,
+				on_attach = function(client, bufnr)
+					client.server_capabilities.documentFormattingProvider =
+						false
+				end,
 			})
 
 			lspconfig.eslint.setup({
 				capabilities = capabilities,
 				on_attach = function(client, bufnr)
-					print("attach eslint")
+					client.server_capabilities.documentFormattingProvider =
+						false
 					-- vim.api.nvim_create_autocmd("BufWritePre", {
 					-- 	buffer = bufnr,
 					-- 	command = "EslintFixAll",
 					-- })
 				end,
+			})
+
+			lspconfig.tailwindcss.setup({
+				on_attach = function(client, bufnr)
+					-- 這裡可以加上你需要的 LSP 附加功能
+				end,
+				settings = {
+					tailwindCSS = {
+						experimental = {
+							classRegex = {
+								"tw`([^`]*)`",
+								'tw="([^"]*)"',
+								"tw\\.\\w+`([^`]*)`",
+							},
+						},
+					},
+				},
 			})
 		end,
 	},

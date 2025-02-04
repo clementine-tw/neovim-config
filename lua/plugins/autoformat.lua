@@ -31,8 +31,21 @@ return { -- Autoformat
 					lsp_format = lsp_format_opt,
 				}
 			end,
+			formatters = {
+				prettier = {
+					-- prepend_args = { "--use-tabs" }, -- 確保 Prettier 使用 Tab
+				},
+			},
 			formatters_by_ft = {
 				lua = { "stylua" },
+				-- web
+				javascript = { "prettier" },
+				javascriptreact = { "prettier" },
+				typescript = { "prettier" },
+				typescriptreact = { "prettier" },
+				json = { "prettier" },
+				html = { "prettier" },
+				css = { "prettier" },
 			},
 		},
 	},
