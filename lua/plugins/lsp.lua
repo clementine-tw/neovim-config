@@ -56,9 +56,16 @@ return {
 			"hrsh7th/cmp-buffer",
 			"hrsh7th/cmp-path",
 			"hrsh7th/cmp-cmdline",
+			"hrsh7th/cmp-nvim-lsp-signature-help",
 			"hrsh7th/nvim-cmp",
-			"L3MON4D3/LuaSnip",
 			"saadparwaiz1/cmp_luasnip",
+			{
+				"L3MON4D3/LuaSnip",
+				dependencies = { "rafamadriz/friendly-snippets" },
+				config = function()
+					require("luasnip.loaders.from_vscode").lazy_load() -- 載入 VSCode 風格的 snippets
+				end,
+			},
 		},
 		config = function()
 			-- 自動重新顯示偵錯訊息
@@ -128,11 +135,12 @@ return {
 					["<C-f>"] = cmp.mapping.scroll_docs(4),
 					["<C-.>"] = cmp.mapping.complete(),
 					["<C-e>"] = cmp.mapping.abort(),
-					["<CR>"] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+					["<C-y>"] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
 				}),
 				sources = cmp.config.sources({
 					{ name = "nvim_lsp" },
 					{ name = "luasnip" }, -- For luasnip users.
+					{ name = "nvim_lsp_signature_help" },
 				}, {
 					{ name = "buffer" },
 				}),
