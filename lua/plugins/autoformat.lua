@@ -12,7 +12,6 @@ return { -- Autoformat
 						lsp_format = "fallback",
 					})
 				end,
-				mode = "",
 				desc = "[F]ormat buffer",
 			},
 		},
