@@ -4,6 +4,9 @@ require("config.lazy")
 -- vim.g.maplocalleader = " "
 
 -- [[ vim options ]]
+
+vim.opt.clipboard = "unnamedplus"
+
 -- line number
 vim.opt.number = true
 vim.opt.relativenumber = true
@@ -34,8 +37,24 @@ vim.opt.cursorline = true
 vim.opt.scrolloff = 10
 
 -- Set tab size
-vim.opt.tabstop = 4
-vim.opt.shiftwidth = 4
+local tabconfig = {
+	html = 2,
+	css = 2,
+	typescript = 2,
+	javascript = 2,
+	default = 4,
+}
+vim.api.nvim_create_autocmd("BufEnter", {
+	callback = function()
+		print(vim.inspect(vim.bo.filetype))
+		local size = tabconfig[vim.bo.filetype]
+		if not size then
+			size = tabconfig.default
+		end
+		vim.opt.tabstop = size
+		vim.opt.shiftwidth = size
+	end,
+})
 
 -- Set fold
 -- vim.opt.foldmethod = "indent"
@@ -70,7 +89,7 @@ vim.keymap.set(
 
 -- Write buffer
 vim.keymap.set("n", "<C-s>", "<cmd>w<cr>")
-vim.keymap.set("i", "<C-s>", "<ESC><cmd>w<cr>", { noremap = true })
+vim.keymap.set({ "i", "v" }, "<C-s>", "<ESC><cmd>w<cr>", { noremap = true })
 
 vim.keymap.set("v", "J", ":m '>+1<cr>gv=gv")
 vim.keymap.set("v", "K", ":m '<-2<cr>gv=gv")
@@ -79,13 +98,13 @@ vim.keymap.set("v", "K", ":m '<-2<cr>gv=gv")
 -- see `:h lua-guide-autocommands`
 
 -- Highlight when yanking (copying) text
-vim.api.nvim_create_autocmd("TextYankPost", {
-	desc = "Highlight when yanking (copying) text",
-	group = vim.api.nvim_create_augroup(
-		"kickstart-highlight-yank",
-		{ clear = true }
-	),
-	callback = function()
-		vim.highlight.on_yank()
-	end,
-})
+-- vim.api.nvim_create_autocmd("TextYankPost", {
+-- 	desc = "Highlight when yanking (copying) text",
+-- 	group = vim.api.nvim_create_augroup(
+-- 		"kickstart-highlight-yank",
+-- 		{ clear = true }
+-- 	),
+-- 	callback = function()
+-- 		vim.highlight.on_yank()
+-- 	end,
+-- })

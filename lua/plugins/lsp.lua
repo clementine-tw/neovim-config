@@ -52,20 +52,18 @@ return {
 		dependencies = {
 			"mason.nvim",
 			"mason-lspconfig.nvim",
-			"hrsh7th/cmp-nvim-lsp",
-			"hrsh7th/cmp-buffer",
-			"hrsh7th/cmp-path",
-			"hrsh7th/cmp-cmdline",
-			"hrsh7th/cmp-nvim-lsp-signature-help",
-			"hrsh7th/nvim-cmp",
-			"saadparwaiz1/cmp_luasnip",
 			{
-				"L3MON4D3/LuaSnip",
-				dependencies = { "rafamadriz/friendly-snippets" },
-				config = function()
-					require("luasnip.loaders.from_vscode").lazy_load() -- 載入 VSCode 風格的 snippets
-				end,
+				"folke/lazydev.nvim",
+				ft = "lua", -- only load on lua files
+				opts = {
+					library = {
+						-- See the configuration section for more details
+						-- Load luvit types when the `vim.uv` word is found
+						{ path = "${3rd}/luv/library", words = { "vim%.uv" } },
+					},
+				},
 			},
+			"saghen/blink.cmp",
 		},
 		config = function()
 			-- 自動重新顯示偵錯訊息
@@ -78,7 +76,6 @@ return {
 			-- 確保 `LspAttach` 只執行一次
 			vim.api.nvim_create_autocmd("LspAttach", {
 				callback = function(args)
-					local bufnr = args.buf
 					local client = vim.lsp.get_client_by_id(args.data.client_id)
 					if not client then
 						return
@@ -88,100 +85,15 @@ return {
 						vim.lsp.with(vim.lsp.handlers.hover, {
 							border = "rounded", -- 圓角邊框（可用 "single", "double", "solid" 等）
 						})
-
-					-- 設定 LSP 快捷鍵
-					local opts = { silent = true, buffer = bufnr }
-					vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-					vim.keymap.set(
-						"n",
-						"<leader>gd",
-						vim.lsp.buf.definition,
-						opts
-					)
-					vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
-					vim.keymap.set(
-						"n",
-						"<leader>ca",
-						vim.lsp.buf.code_action,
-						opts
-					)
-
-					-- 設定格式化快捷鍵
-					if
-						client.server_capabilities.documentFormattingProvider
-					then
-						vim.keymap.set("n", "<leader>f", function()
-							vim.lsp.buf.format({ async = true })
-						end, opts)
-					end
 				end,
 			})
 
-			local cmp = require("cmp")
-
-			cmp.setup({
-				snippet = {
-					-- REQUIRED - you must specify a snippet engine
-					expand = function(args)
-						require("luasnip").lsp_expand(args.body) -- For `luasnip` users.
-					end,
-				},
-				window = {
-					completion = cmp.config.window.bordered(),
-					documentation = cmp.config.window.bordered(),
-				},
-				mapping = cmp.mapping.preset.insert({
-					["<C-b>"] = cmp.mapping.scroll_docs(-4),
-					["<C-f>"] = cmp.mapping.scroll_docs(4),
-					["<C-.>"] = cmp.mapping.complete(),
-					["<C-e>"] = cmp.mapping.abort(),
-					["<C-y>"] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-				}),
-				sources = cmp.config.sources({
-					{ name = "nvim_lsp" },
-					{ name = "luasnip" }, -- For luasnip users.
-					{ name = "nvim_lsp_signature_help" },
-				}, {
-					{ name = "buffer" },
-				}),
-			})
-
-			-- To use git you need to install the plugin petertriho/cmp-git and uncomment lines below
-			-- Set configuration for specific filetype.
-			--[[ cmp.setup.filetype('gitcommit', {
-				sources = cmp.config.sources({
-					{ name = 'git' },
-				}, {
-					{ name = 'buffer' },
-				})
-			})
-			require("cmp_git").setup() ]]
-			--
-
-			-- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
-			cmp.setup.cmdline({ "/", "?" }, {
-				mapping = cmp.mapping.preset.cmdline(),
-				sources = {
-					{ name = "buffer" },
-				},
-			})
-
-			-- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
-			cmp.setup.cmdline(":", {
-				mapping = cmp.mapping.preset.cmdline(),
-				sources = cmp.config.sources({
-					{ name = "path" },
-				}, {
-					{ name = "cmdline" },
-				}),
-				matching = { disallow_symbol_nonprefix_matching = false },
-			})
-
 			-- Set up lspconfig.
-			local capabilities = require("cmp_nvim_lsp").default_capabilities()
+			local capabilities = require("blink.cmp").get_lsp_capabilities()
 			local lspconfig = require("lspconfig")
 
 			lspconfig.lua_ls.setup({
+				capabilities = capabilities,
 				on_init = function(client)
 					if client.workspace_folders then
 						local path = client.workspace_folders[1].name
@@ -288,6 +200,7 @@ return {
 			})
 
 			lspconfig.tailwindcss.setup({
+				capabilities = capabilities,
 				on_attach = function(client, bufnr)
 					-- 這裡可以加上你需要的 LSP 附加功能
 				end,
